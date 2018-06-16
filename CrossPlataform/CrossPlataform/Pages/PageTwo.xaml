@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CrossPlataform.Pages.PageTwo">
+    <ContentPage.Content>
+        <ListView x:Name="catalog" 
+                  ItemTapped="Handle_ItemTapped"
+                  SelectedItem="{Binding SelectedItem, Mode=OneWay}"
+                  HasUnevenRows="True"
+                  Margin="10, 10, 0, 0">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell Height="180">
+                        <StackLayout Orientation="Horizontal">
+                            <BoxView BackgroundColor="#808080" WidthRequest="10" Margin="0,0,0,10" />
+                            <StackLayout BackgroundColor="White" Orientation="Vertical" Margin="5,5,10,5">
+                                <Image Source="{Binding ThumbnailImageUrl, StringFormat='http://ecommercee.azurewebsites.net{0}'}" />
+                                <Label Text="{Binding Name}" FontAttributes="Bold" />
+                                <Label Text="{Binding Price, StringFormat='Price: {0}'}" TextColor="Gray" />
+                            </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage.Content>
+</ContentPage>
