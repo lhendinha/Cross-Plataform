@@ -1,7 +1,5 @@
 ﻿using CrossPlataform.Models;
-using System;
 using System.Collections.Generic;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -20,12 +18,12 @@ namespace CrossPlataform.Pages
             // Build the Menu
             MainMenuItems = new List<MainMenuItem>()
             {
-                new MainMenuItem() { Title = "Page One", Icon = "menu_inbox.png", TargetType = typeof(PageOne) },
-                new MainMenuItem() { Title = "Page Two", Icon = "menu_stock.png", TargetType = typeof(PageTwo) }
+                new MainMenuItem() { Title = "Home", Icon = "menu_inbox.png", TargetType = typeof(Home) },
+                new MainMenuItem() { Title = "Catalog", Icon = "menu_catalog.png", TargetType = typeof(Catalog) }
             };
 
             // Set the default page, this is the "home" page.
-            Detail = new NavigationPage(new PageOne());
+            Detail = new NavigationPage(new Home());
 
             InitializeComponent();
         }
@@ -36,13 +34,13 @@ namespace CrossPlataform.Pages
             var item = e.SelectedItem as MainMenuItem;
             if (item != null)
             {
-                if (item.Title.Equals("Page One"))
+                if (item.Title.Equals("Home"))
                 {
-                    Detail = new NavigationPage(new PageOne());
+                    Detail = new NavigationPage(new Home());
                 }
-                else if (item.Title.Equals("Page Two"))
+                else if (item.Title.Equals("Catalog"))
                 {
-                    Detail = new NavigationPage(new PageTwo());
+                    Detail = new NavigationPage(new Catalog());
                 }
 
                 MenuListView.SelectedItem = null;

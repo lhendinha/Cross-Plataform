@@ -24,18 +24,19 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\ProductOptionVm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ProductVariationVm.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ProductVm.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Catalog.xaml.cs">
+      <DependentUpon>Catalog.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\Home.xaml.cs">
+      <DependentUpon>Home.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Pages\MainMenu.xaml.cs">
       <DependentUpon>MainMenu.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\PageOne.xaml.cs">
-      <DependentUpon>PageOne.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Pages\PageTwo.xaml.cs">
-      <DependentUpon>PageTwo.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\Functions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Pages\MainMenu.xaml">
@@ -44,13 +45,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Pages\PageOne.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Pages\Home.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Pages\PageTwo.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Pages\Catalog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>

@@ -4,9 +4,9 @@ using Xamarin.Forms.Xaml;
 namespace CrossPlataform.Pages
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class PageOne : ContentPage
+	public partial class Home : ContentPage
 	{
-		public PageOne ()
+		public Home ()
 		{
 			InitializeComponent ();
 		}
