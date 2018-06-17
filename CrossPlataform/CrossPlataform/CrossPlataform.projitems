@@ -37,6 +37,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\Functions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\Text.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Pages\MainMenu.xaml">

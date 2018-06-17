@@ -3,8 +3,6 @@ using CrossPlataform.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -13,44 +11,29 @@ namespace CrossPlataform.Pages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Catalog : ContentPage
     {
+        private readonly string _catalogPropertie = "Catalog";
+
         public Catalog()
         {
             InitializeComponent();
 
+            CacheData(true);
             PopulateListView(false);
         }
 
-        private async Task<List<ProductVm>> LoadApiData()
+        void PopulateListView(bool isRefreshing)
         {
-            List<ProductVm> products = new List<ProductVm>();
+            var data = JsonConvert.DeserializeObject<List<ProductVm>>(Application.Current.Properties[_catalogPropertie].ToString());
 
-            HttpClient client = new HttpClient();
-
-            try
-            {
-                var response = await client.GetStringAsync("http://ecommercee.azurewebsites.net/api/products");
-
-                products = JsonConvert.DeserializeObject<List<ProductVm>>(response);
-            }
-            catch (Exception)
-            {
-                await DisplayAlert("Error", "Wasn't possible to load product list.", "OK");
-            }
-
-            return products;
-        }
-
-        async void PopulateListView(bool isRefreshing)
-        {
             if (isRefreshing)
             {
-                catalog.ItemsSource = await LoadApiData();
+                catalog.ItemsSource = data;
             }
             else
             {
                 LoadingIcon(false);
 
-                catalog.ItemsSource = await LoadApiData();
+                catalog.ItemsSource = data;
 
                 LoadingIcon(true);
             }
@@ -70,7 +53,7 @@ namespace CrossPlataform.Pages
             }
         }
 
-        async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
+        protected async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             Functions functions = new Functions();
 
@@ -81,13 +64,58 @@ namespace CrossPlataform.Pages
                 return;
             }
 
-            await DisplayAlert("Details", functions.ReplaceCharacteres(catalog.ShortDescription), "OK");
+            await DisplayAlert(DisplayAlertProperties.MenuTitle.DETAILS_TITLE, functions.ReplaceCharacteres(catalog.ShortDescription), DisplayAlertProperties.Button.OK);
         }
 
-        protected void ListItems_Refreshing(object sender, EventArgs e)
+        protected async void ListItems_Refreshing(object sender, EventArgs e)
         {
-            PopulateListView(true);
+            Functions functions = new Functions();
+
+            var isConnect = await functions.VerifyConnection();
+            if (isConnect)
+            {
+                CacheData(true);
+                PopulateListView(true);
+            }
+            else
+            {
+                await DisplayAlert(DisplayAlertProperties.MenuTitle.ERROR_TITLE, DisplayAlertProperties.MessageBody.ERROR_CONNECT_TO_INTERNET, DisplayAlertProperties.Button.OK);
+            }
+            
             catalog.EndRefresh();
+        }
+
+        private async void CacheData(bool store)
+        {
+            Functions functions = new Functions();
+
+            if (store)
+            {
+                var isConnect = await functions.VerifyConnection();
+
+                if (string.IsNullOrEmpty(Application.Current.Properties[_catalogPropertie].ToString()))
+                {
+                    if (isConnect)
+                    {
+                        Application.Current.Properties[_catalogPropertie] = await functions.LoadApiData();
+                    }
+                    else
+                    {
+                        await DisplayAlert(DisplayAlertProperties.MenuTitle.ERROR_TITLE, DisplayAlertProperties.MessageBody.ERROR_CONNECT_TO_INTERNET, DisplayAlertProperties.Button.OK);
+                    }
+                }
+                else
+                {
+                    if (isConnect)
+                    {
+                        Application.Current.Properties[_catalogPropertie] = await functions.LoadApiData();
+                    }
+                    else
+                    {
+                        await DisplayAlert(DisplayAlertProperties.MenuTitle.ERROR_TITLE, DisplayAlertProperties.MessageBody.ERROR_CONNECT_TO_INTERNET, DisplayAlertProperties.Button.OK);
+                    }
+                }
+            }
         }
     }
 }
