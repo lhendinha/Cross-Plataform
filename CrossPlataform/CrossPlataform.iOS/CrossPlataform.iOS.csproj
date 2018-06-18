@@ -157,19 +157,16 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="3.0.0.482510" />
+    <PackageReference Include="Xamarin.Forms" Version="3.0.0.561731" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\hamburger_menu.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\menu_inbox.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\menu_stock.png" />
-  </ItemGroup>
-  <ItemGroup>
     <BundleResource Include="Resources\menu_catalog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\menu_home.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\CrossPlataform\CrossPlataform.projitems" Label="Shared" />

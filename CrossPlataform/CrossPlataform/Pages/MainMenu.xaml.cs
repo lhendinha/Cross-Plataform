@@ -18,7 +18,7 @@ namespace CrossPlataform.Pages
             // Build the Menu
             MainMenuItems = new List<MainMenuItem>()
             {
-                new MainMenuItem() { Title = "Home", Icon = "menu_inbox.png", TargetType = typeof(Home) },
+                new MainMenuItem() { Title = "Home", Icon = "menu_home.png", TargetType = typeof(Home) },
                 new MainMenuItem() { Title = "Catalog", Icon = "menu_catalog.png", TargetType = typeof(Catalog) }
             };
 

@@ -57,12 +57,12 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="3.0.0.482510" />
-    <PackageReference Include="Xamarin.Android.Support.Design" Version="27.0.2" />
-    <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="27.0.2" />
-    <PackageReference Include="Xamarin.Android.Support.v4" Version="27.0.2" />
-    <PackageReference Include="Xamarin.Android.Support.v7.CardView" Version="27.0.2" />
-    <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2" />
+    <PackageReference Include="Xamarin.Forms" Version="3.0.0.561731" />
+    <PackageReference Include="Xamarin.Android.Support.Design" Version="27.0.2.1" />
+    <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="27.0.2.1" />
+    <PackageReference Include="Xamarin.Android.Support.v4" Version="27.0.2.1" />
+    <PackageReference Include="Xamarin.Android.Support.v7.CardView" Version="27.0.2.1" />
+    <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -102,12 +102,6 @@
     <AndroidResource Include="Resources\drawable\icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\menu_inbox.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable\menu_stock.png" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\icon.png" />
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +112,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\menu_catalog.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\menu_home.png" />
   </ItemGroup>
   <Import Project="..\CrossPlataform\CrossPlataform.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

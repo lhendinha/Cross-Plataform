@@ -3,6 +3,7 @@ using CrossPlataform.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -18,7 +19,6 @@ namespace CrossPlataform.Pages
             InitializeComponent();
 
             CacheData(true);
-            PopulateListView(false);
         }
 
         void PopulateListView(bool isRefreshing)
@@ -93,6 +93,11 @@ namespace CrossPlataform.Pages
             {
                 var isConnect = await functions.VerifyConnection();
 
+                if (!Application.Current.Properties.ContainsKey(_catalogPropertie))
+                {
+                    await CreateCache(_catalogPropertie);
+                }
+
                 if (string.IsNullOrEmpty(Application.Current.Properties[_catalogPropertie].ToString()))
                 {
                     if (isConnect)
@@ -116,6 +121,16 @@ namespace CrossPlataform.Pages
                     }
                 }
             }
+
+            await Application.Current.SavePropertiesAsync();
+
+            PopulateListView(false);
+        }
+
+        private async Task CreateCache(string cacheKey)
+        {
+            Application.Current.Properties.TryAdd(cacheKey, string.Empty);
+            await Application.Current.SavePropertiesAsync();
         }
     }
 }
