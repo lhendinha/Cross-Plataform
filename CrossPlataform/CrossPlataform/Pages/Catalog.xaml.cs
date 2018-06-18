@@ -18,6 +18,8 @@ namespace CrossPlataform.Pages
         {
             InitializeComponent();
 
+            LoadingIcon(false);
+
             CacheData(true);
         }
 
