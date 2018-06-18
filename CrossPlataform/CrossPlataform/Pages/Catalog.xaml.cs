@@ -74,8 +74,7 @@ namespace CrossPlataform.Pages
             var isConnect = await functions.VerifyConnection();
             if (isConnect)
             {
-                CacheData(true);
-                PopulateListView(true);
+                CacheData(false);
             }
             else
             {
@@ -91,18 +90,22 @@ namespace CrossPlataform.Pages
 
             if (store)
             {
-                var isConnect = await functions.VerifyConnection();
-
                 if (!Application.Current.Properties.ContainsKey(_catalogPropertie))
                 {
                     await CreateCache(_catalogPropertie);
                 }
 
+                var isConnect = await functions.VerifyConnection();
+
                 if (string.IsNullOrEmpty(Application.Current.Properties[_catalogPropertie].ToString()))
                 {
                     if (isConnect)
                     {
-                        Application.Current.Properties[_catalogPropertie] = await functions.LoadApiData();
+                        var apiData = await functions.LoadApiData();
+                        if (Application.Current.Properties[_catalogPropertie].ToString() != apiData)
+                        {
+                            Application.Current.Properties[_catalogPropertie] = apiData;
+                        }
                     }
                     else
                     {
@@ -121,10 +124,30 @@ namespace CrossPlataform.Pages
                     }
                 }
             }
+            else
+            {
+                var apiData = await functions.LoadApiData();
+                if (Application.Current.Properties[_catalogPropertie].ToString() != apiData)
+                {
+                    Application.Current.Properties[_catalogPropertie] = apiData;
+                }
+            }
 
             await Application.Current.SavePropertiesAsync();
 
-            PopulateListView(false);
+            IsRefreshing(store);
+        }
+
+        private void IsRefreshing(bool whichAction)
+        {
+            if (whichAction)
+            {
+                PopulateListView(false);
+            }
+            else
+            {
+                PopulateListView(true);
+            }
         }
 
         private async Task CreateCache(string cacheKey)
