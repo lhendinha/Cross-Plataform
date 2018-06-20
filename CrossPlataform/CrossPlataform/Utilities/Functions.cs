@@ -27,7 +27,7 @@ namespace CrossPlataform.Utilities
             return textToReplace;
         }
 
-        public async Task<bool> VerifyConnection()
+        public async Task<bool> IsConnect()
         {
             HttpClient client = new HttpClient();
             bool statusCode = false;

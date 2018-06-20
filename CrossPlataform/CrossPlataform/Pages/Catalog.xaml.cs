@@ -18,27 +18,39 @@ namespace CrossPlataform.Pages
         {
             InitializeComponent();
 
-            LoadingIcon(false);
-
-            CacheData(true);
+            VerifyPendencies();
         }
 
-        void PopulateListView(bool isRefreshing)
+        protected async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
         {
-            var data = JsonConvert.DeserializeObject<List<ProductVm>>(Application.Current.Properties[_catalogPropertie].ToString());
+            Functions functions = new Functions();
 
-            if (isRefreshing)
+            ProductVm catalog = e.Item as ProductVm;
+
+            if (catalog == null)
             {
-                catalog.ItemsSource = data;
+                return;
+            }
+
+            await Application.Current.MainPage.DisplayAlert(DisplayAlertProperties.MenuTitle.ERROR_TITLE, DisplayAlertProperties.MessageBody.ERROR_CONNECT_TO_INTERNET, DisplayAlertProperties.Button.OK);
+        }
+
+        protected async void ListItems_Refreshing(object sender, EventArgs e)
+        {
+            Functions functions = new Functions();
+
+            var isConnected = await functions.IsConnect();
+            if (isConnected)
+            {
+                await VerifyCache();
+                PopulateListView(true);
             }
             else
             {
-                LoadingIcon(false);
-
-                catalog.ItemsSource = data;
-
-                LoadingIcon(true);
+                await Application.Current.MainPage.DisplayAlert(DisplayAlertProperties.MenuTitle.ERROR_TITLE, DisplayAlertProperties.MessageBody.ERROR_CONNECT_TO_INTERNET, DisplayAlertProperties.Button.OK);
             }
+
+            catalog.EndRefresh();
         }
 
         private void LoadingIcon(bool isLoaded)
@@ -55,107 +67,71 @@ namespace CrossPlataform.Pages
             }
         }
 
-        protected async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
+        private async void VerifyPendencies()
         {
-            Functions functions = new Functions();
+            await VerifyCache();
 
-            ProductVm catalog = e.Item as ProductVm;
-
-            if (catalog == null)
-            {
-                return;
-            }
-
-            await DisplayAlert(DisplayAlertProperties.MenuTitle.DETAILS_TITLE, functions.ReplaceCharacteres(catalog.ShortDescription), DisplayAlertProperties.Button.OK);
+            PopulateListView(false);
         }
 
-        protected async void ListItems_Refreshing(object sender, EventArgs e)
+        private async Task VerifyCache()
         {
             Functions functions = new Functions();
 
-            var isConnect = await functions.VerifyConnection();
-            if (isConnect)
+            var isConnected = await functions.IsConnect();
+
+            if (!App.Current.Properties.ContainsKey(_catalogPropertie))
             {
-                CacheData(false);
+                if (isConnected)
+                {
+                    App.Current.Properties[_catalogPropertie] = await functions.LoadApiData();
+                }
+                else
+                {
+                    App.Current.Properties[_catalogPropertie] = null;
+                }
             }
             else
             {
-                await DisplayAlert(DisplayAlertProperties.MenuTitle.ERROR_TITLE, DisplayAlertProperties.MessageBody.ERROR_CONNECT_TO_INTERNET, DisplayAlertProperties.Button.OK);
-            }
-            
-            catalog.EndRefresh();
-        }
-
-        private async void CacheData(bool store)
-        {
-            Functions functions = new Functions();
-
-            if (store)
-            {
-                if (!Application.Current.Properties.ContainsKey(_catalogPropertie))
+                if (isConnected)
                 {
-                    await CreateCache(_catalogPropertie);
-                }
+                    var cachedData = App.Current.Properties[_catalogPropertie].ToString();
+                    var apiData = await functions.LoadApiData();
 
-                var isConnect = await functions.VerifyConnection();
-
-                if (string.IsNullOrEmpty(Application.Current.Properties[_catalogPropertie].ToString()))
-                {
-                    if (isConnect)
+                    if (string.IsNullOrEmpty(cachedData) || cachedData != apiData)
                     {
-                        var apiData = await functions.LoadApiData();
-                        if (Application.Current.Properties[_catalogPropertie].ToString() != apiData)
-                        {
-                            Application.Current.Properties[_catalogPropertie] = apiData;
-                        }
-                    }
-                    else
-                    {
-                        await DisplayAlert(DisplayAlertProperties.MenuTitle.ERROR_TITLE, DisplayAlertProperties.MessageBody.ERROR_CONNECT_TO_INTERNET, DisplayAlertProperties.Button.OK);
+                        App.Current.Properties[_catalogPropertie] = apiData;
                     }
                 }
                 else
                 {
-                    if (isConnect)
+                    var cachedData = App.Current.Properties[_catalogPropertie].ToString();
+                    if (string.IsNullOrEmpty(cachedData))
                     {
-                        Application.Current.Properties[_catalogPropertie] = await functions.LoadApiData();
-                    }
-                    else
-                    {
-                        await DisplayAlert(DisplayAlertProperties.MenuTitle.ERROR_TITLE, DisplayAlertProperties.MessageBody.ERROR_CONNECT_TO_INTERNET, DisplayAlertProperties.Button.OK);
+                        await Application.Current.MainPage.DisplayAlert(DisplayAlertProperties.MenuTitle.ERROR_TITLE, DisplayAlertProperties.MessageBody.ERROR_CONNECT_TO_INTERNET, DisplayAlertProperties.Button.OK);
                     }
                 }
             }
-            else
-            {
-                var apiData = await functions.LoadApiData();
-                if (Application.Current.Properties[_catalogPropertie].ToString() != apiData)
-                {
-                    Application.Current.Properties[_catalogPropertie] = apiData;
-                }
-            }
 
-            await Application.Current.SavePropertiesAsync();
-
-            IsRefreshing(store);
+            await App.Current.SavePropertiesAsync();
         }
 
-        private void IsRefreshing(bool whichAction)
+        private void PopulateListView(bool isRefreshing)
         {
-            if (whichAction)
+            var data = JsonConvert.DeserializeObject<List<ProductVm>>(Application.Current.Properties[_catalogPropertie].ToString());
+
+            if (isRefreshing)
             {
-                PopulateListView(false);
+                catalog.ItemsSource = data;
             }
             else
             {
-                PopulateListView(true);
-            }
-        }
+                LoadingIcon(false);
 
-        private async Task CreateCache(string cacheKey)
-        {
-            Application.Current.Properties.TryAdd(cacheKey, string.Empty);
-            await Application.Current.SavePropertiesAsync();
+                catalog.ItemsSource = data;
+
+                LoadingIcon(true);
+            }
         }
     }
 }
